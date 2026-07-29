@@ -68,14 +68,6 @@ class MainActivity : AppCompatActivity() {
         binding.labelBeautify.isSelected = mode == ToolMode.BEAUTIFY
         binding.labelSettings.isSelected = mode == ToolMode.SETTINGS
 
-        binding.currentTabLabel.text = when (mode) {
-            ToolMode.DETECT -> "Nhận diện"
-            ToolMode.DEOBFUSCATE -> "Giải mã"
-            ToolMode.OBFUSCATE -> "Mã hóa"
-            ToolMode.BEAUTIFY -> "Làm đẹp"
-            ToolMode.SETTINGS -> "Cài đặt"
-        }
-
         val fragment: Fragment = if (mode == ToolMode.SETTINGS) {
             SettingsFragment()
         } else {

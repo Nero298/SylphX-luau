@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Animated theme background (behind everything) -->
     <com.sylphx.luau.AnimatedThemeView
         android:id="@+id/animatedBackground"
         android:layout_width="match_parent"
@@ -24,28 +23,35 @@
         android:layout_height="match_parent"
         android:background="@color/overlay_scrim" />
 
-    <!-- Mobile-first vertical shell: header on top, scrollable content in the
-         middle, bottom navigation bar replaces the old desktop-style sidebar. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header: big wordmark logo as the hero element, no more tiny icon -->
+        <!-- Header: mascot avatar + enlarged wordmark on the left, WIP badge top-right -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/surface"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="18dp"
-            android:paddingBottom="14dp"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="12dp"
             android:elevation="3dp">
 
             <ImageView
-                android:layout_width="125dp"
-                android:layout_height="72dp"
+                android:id="@+id/mascotLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo_mascot_round"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="86dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
                 android:src="@drawable/logo_wordmark"
@@ -59,39 +65,32 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/status_pill_bg"
+                android:background="@drawable/wip_badge_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="12dp"
-                android:paddingVertical="7dp">
-
-                <View
-                    android:layout_width="7dp"
-                    android:layout_height="7dp"
-                    android:layout_marginEnd="7dp"
-                    android:background="@drawable/status_dot" />
+                android:paddingVertical="6dp">
 
                 <TextView
-                    android:id="@+id/currentTabLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Detect"
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:text="WIP"
+                    android:textColor="@color/wip_text"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Fragment container: fills all remaining vertical space above the nav bar -->
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Bottom navigation bar: 5 destinations, mobile-native pattern -->
+        <!-- Bottom navigation: text-symbol markers instead of icon glyphs -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,13 +116,15 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/iconDetect"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_tab_detect"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="?_"
+                        android:textColor="@color/sidebar_icon_tint"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/labelDetect"
@@ -152,13 +153,15 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/iconDeobfuscate"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_tab_deobfuscate"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="{/}"
+                        android:textColor="@color/sidebar_icon_tint"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/labelDeobfuscate"
@@ -187,13 +190,15 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/iconObfuscate"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_tab_obfuscate"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="&lt;/&gt;"
+                        android:textColor="@color/sidebar_icon_tint"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/labelObfuscate"
@@ -222,13 +227,15 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/iconBeautify"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_tab_beautify"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="{ }"
+                        android:textColor="@color/sidebar_icon_tint"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/labelBeautify"
@@ -257,13 +264,15 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/iconSettings"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_tab_settings"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="#:"
+                        android:textColor="@color/sidebar_icon_tint"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/labelSettings"

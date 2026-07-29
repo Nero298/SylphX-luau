@@ -15,6 +15,7 @@ data class AppTheme(
 ) {
     companion object {
         val ALL: List<AppTheme> = listOf(
+            AppTheme("cyan_darkblue", "Cyan Blue", 0xFF0F2044.toInt(), 0xFF050B18.toInt(), 0xFF22C7F5.toInt()),
             AppTheme("particles", "Particles", 0xFF2B2B5C.toInt(), 0xFF0A0A14.toInt(), 0xFF8C8CFF.toInt()),
             AppTheme("matrix_rain", "Matrix Rain", 0xFF0F3D1E.toInt(), 0xFF07140A.toInt(), 0xFF33FF66.toInt()),
             AppTheme("aurora_borealis", "Aurora Borealis", 0xFF0E3B4E.toInt(), 0xFF081824.toInt(), 0xFF33D6FF.toInt()),
@@ -37,7 +38,7 @@ data class AppTheme(
             AppTheme("frost_bite", "Frost Bite", 0xFF0E3A4A.toInt(), 0xFF071820.toInt(), 0xFF7DE3FF.toInt())
         )
 
-        val DEFAULT: AppTheme = ALL.find { it.id == "neon_pulse" } ?: ALL.first()
+        val DEFAULT: AppTheme = ALL.find { it.id == "cyan_darkblue" } ?: ALL.first()
 
         fun byId(id: String?): AppTheme = ALL.find { it.id == id } ?: DEFAULT
     }

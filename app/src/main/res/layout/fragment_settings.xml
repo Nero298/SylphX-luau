@@ -22,7 +22,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🖼️  Hình nền tùy chỉnh"
+                android:text="[img] Hình nền tùy chỉnh"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -50,7 +50,7 @@
                     android:background="@drawable/toolbar_btn_bg_accent"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="⬆  Tải ảnh/GIF"
+                    android:text="[^] Tải ảnh/GIF"
                     android:textAllCaps="false"
                     android:textColor="@color/accent_cyan"
                     android:textStyle="bold"
@@ -64,7 +64,7 @@
                     android:background="@drawable/toolbar_btn_bg"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="✕  Xóa"
+                    android:text="[x] Xóa"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="12.5sp" />
@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🎨  Chủ đề nền động"
+                android:text="[#] Chủ đề nền động"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />

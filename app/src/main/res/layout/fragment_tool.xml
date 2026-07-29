@@ -28,6 +28,16 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="monospace"
+                android:text="engines ||"
+                android:textColor="@color/text_muted"
+                android:textSize="11.5sp"
+                android:textStyle="bold" />
+
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/presetChipGroup"
                 android:layout_width="wrap_content"
@@ -47,7 +57,7 @@
                 android:insetBottom="0dp"
                 android:minWidth="0dp"
                 android:paddingHorizontal="18dp"
-                android:text="🔍  Nhận diện loại"
+                android:text="[?] Nhận diện loại"
                 android:textAllCaps="false"
                 android:textColor="@color/bg_dark"
                 android:textSize="12.5sp"
@@ -78,12 +88,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📥  Input" />
+            android:text="&lt;in&gt; Input" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📤  Output" />
+            android:text="&lt;out&gt; Output" />
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -118,7 +128,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:paddingHorizontal="14dp"
-                    android:text="✕ Xóa"
+                    android:text="[x] Xóa"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="12sp" />
@@ -133,7 +143,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:paddingHorizontal="14dp"
-                    android:text="⬆ Tải file"
+                    android:text="[^] Tải file"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="12sp" />
@@ -146,7 +156,7 @@
                 android:layout_height="42dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/url_input_bg"
-                android:hint="🔗  Dán URL raw code, nhấn Enter…"
+                android:hint="#: Dán URL raw code, nhấn Enter…"
                 android:imeOptions="actionGo"
                 android:inputType="textUri"
                 android:maxLines="1"
@@ -230,7 +240,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:paddingHorizontal="14dp"
-                    android:text="✕ Xóa"
+                    android:text="[x] Xóa"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="12sp" />
@@ -245,7 +255,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:paddingHorizontal="14dp"
-                    android:text="⧉ Copy"
+                    android:text="[::] Copy"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="12sp" />
@@ -264,7 +274,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:paddingHorizontal="14dp"
-                    android:text="⬇ Tải xuống"
+                    android:text="[v] Tải xuống"
                     android:textAllCaps="false"
                     android:textColor="@color/accent_cyan"
                     android:textStyle="bold"
@@ -416,7 +426,7 @@
                 android:background="@drawable/run_btn_bg"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="▶  Chạy"
+                android:text="&gt; Chạy"
                 android:textAllCaps="false"
                 android:textColor="@color/bg_dark"
                 android:textSize="14.5sp"
