@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Core dark navy/cyan palette -->
+    <color name="bg_dark">#060B14</color>
+    <color name="bg_panel">#0A1220</color>
+    <color name="surface">#0F1B2E</color>
+    <color name="surface_raised">#152438</color>
+    <color name="sidebar_bg">#081019</color>
+
+    <color name="accent_cyan">#22D3EE</color>
+    <color name="accent_cyan_dim">#0E7490</color>
+    <color name="accent_blue">#3B82F6</color>
+    <color name="accent_lime">#B6FF3D</color>
+    <color name="accent_pink">#FF3D9A</color>
+
+    <color name="text_primary">#E6F6FB</color>
+    <color name="text_secondary">#7FA8BD</color>
+    <color name="text_muted">#4A6478</color>
+
+    <color name="error_red">#FF5C5C</color>
+    <color name="success_green">#3DFF8C</color>
+
+    <color name="border_subtle">#1A2C40</color>
+    <color name="divider">#16283B</color>
+    <color name="overlay_scrim">#CC060B14</color>
+    <color name="chip_bg">#0F2233</color>
+    <color name="icon_bg">#061018</color>
+
+    <!-- Sidebar icon tint states -->
+    <color name="icon_inactive">#5A7C90</color>
+    <color name="icon_active">#22D3EE</color>
+
+    <!-- Button ripple / pressed overlays -->
+    <color name="ripple_cyan">#3322D3EE</color>
+    <color name="ripple_light">#22FFFFFF</color>
+    <color name="run_btn_pressed">#0E7490</color>
+
+    <!-- Sidebar glow indicator -->
+    <color name="sidebar_glow">#4022D3EE</color>
+</resources>

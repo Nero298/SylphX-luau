@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="14dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <!-- Preset/engine chip row + Detect button row (Obfuscate/Deobfuscate only, hidden otherwise) -->
+    <HorizontalScrollView
+        android:id="@+id/chipScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/presetChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/detectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/toolbar_btn_bg"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="14dp"
+                android:text="Detect"
+                android:textAllCaps="false"
+                android:textColor="@color/accent_cyan"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!-- Two-column fixed layout: Input | divider | Output. Both columns share
+         identical structure (toolbar row + panel + footer label row) so their
+         heights always match, regardless of content. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- INPUT PANEL -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Input toolbar: Clear | Upload | URL field -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="Input"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/clearInputButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/toolbar_btn_bg"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="Clear"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/pickFileButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/toolbar_btn_bg"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="Upload"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp" />
+
+                <EditText
+                    android:id="@+id/urlInput"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/url_input_bg"
+                    android:hint="Dán URL raw code, nhấn Enter..."
+                    android:imeOptions="actionGo"
+                    android:inputType="textUri"
+                    android:maxLines="1"
+                    android:paddingHorizontal="10dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/inputPanelFrame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/panel_bg"
+                android:padding="1dp">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical">
+
+                    <EditText
+                        android:id="@+id/codeInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="monospace"
+                        android:gravity="top|start"
+                        android:hint="Dán code vào đây..."
+                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:minHeight="200dp"
+                        android:padding="12dp"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textSize="12sp" />
+
+                </ScrollView>
+
+                <!-- Floating file/URL status chip, overlaid so it never
+                     changes the panel's height (fixes Input/Output size
+                     mismatch caused by the old below-panel label). -->
+                <TextView
+                    android:id="@+id/pickedFileLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/floating_chip_bg"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text=""
+                    android:textColor="@color/accent_cyan"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Vertical divider between panels -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:background="@color/divider" />
+
+        <!-- OUTPUT PANEL (structurally identical to Input, so both panels
+             always end up the same height) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Output"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/clearOutputButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/toolbar_btn_bg"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="Clear"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/copyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/toolbar_btn_bg"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="Copy"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/toolbar_btn_bg"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="Download"
+                    android:textAllCaps="false"
+                    android:textColor="@color/accent_cyan"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/outputPanelFrame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/panel_bg"
+                android:padding="1dp">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical">
+
+                    <EditText
+                        android:id="@+id/resultOutput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:fontFamily="monospace"
+                        android:gravity="top|start"
+                        android:hint="Kết quả sẽ hiện ở đây..."
+                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:minHeight="200dp"
+                        android:padding="12dp"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_muted"
+                        android:textIsSelectable="true"
+                        android:textSize="12sp" />
+
+                </ScrollView>
+
+                <!-- Loading skeleton shown while a request is running -->
+                <LinearLayout
+                    android:id="@+id/outputLoadingSkeleton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_panel"
+                    android:orientation="vertical"
+                    android:padding="14dp"
+                    android:visibility="gone">
+
+                    <View android:layout_width="80%" android:layout_height="12dp" android:layout_marginBottom="10dp" android:background="@drawable/skeleton_bar" />
+                    <View android:layout_width="60%" android:layout_height="12dp" android:layout_marginBottom="10dp" android:background="@drawable/skeleton_bar" />
+                    <View android:layout_width="90%" android:layout_height="12dp" android:layout_marginBottom="10dp" android:background="@drawable/skeleton_bar" />
+                    <View android:layout_width="45%" android:layout_height="12dp" android:layout_marginBottom="10dp" android:background="@drawable/skeleton_bar" />
+                    <View android:layout_width="70%" android:layout_height="12dp" android:background="@drawable/skeleton_bar" />
+
+                </LinearLayout>
+
+                <!-- Floating status chip mirrors Input's file-status chip so
+                     both panels keep an identical footer element. -->
+                <TextView
+                    android:id="@+id/outputSizeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/floating_chip_bg"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text=""
+                    android:textColor="@color/accent_lime"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Bottom status/run bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/statusLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/accent_lime"
+            android:textSize="12sp" />
+
+        <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="44dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/runButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/run_btn_bg"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Chạy"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_dark"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/bg_dark"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
