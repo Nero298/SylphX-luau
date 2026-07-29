@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** Small "magnetic pop" bounce on the tapped sidebar icon, then switches tabs. */
+    /** Small "magnetic pop" bounce on the tapped bottom-nav icon, then switches tabs. */
     private fun onTabClicked(view: View, mode: ToolMode) {
         if (mode == currentMode) return
         view.animate()
@@ -56,12 +56,6 @@ class MainActivity : AppCompatActivity() {
         binding.tabBeautify.isSelected = mode == ToolMode.BEAUTIFY
         binding.tabSettings.isSelected = mode == ToolMode.SETTINGS
 
-        binding.glowDetect.isSelected = mode == ToolMode.DETECT
-        binding.glowDeobfuscate.isSelected = mode == ToolMode.DEOBFUSCATE
-        binding.glowObfuscate.isSelected = mode == ToolMode.OBFUSCATE
-        binding.glowBeautify.isSelected = mode == ToolMode.BEAUTIFY
-        binding.glowSettings.isSelected = mode == ToolMode.SETTINGS
-
         binding.iconDetect.isSelected = mode == ToolMode.DETECT
         binding.iconDeobfuscate.isSelected = mode == ToolMode.DEOBFUSCATE
         binding.iconObfuscate.isSelected = mode == ToolMode.OBFUSCATE
@@ -75,11 +69,11 @@ class MainActivity : AppCompatActivity() {
         binding.labelSettings.isSelected = mode == ToolMode.SETTINGS
 
         binding.currentTabLabel.text = when (mode) {
-            ToolMode.DETECT -> "Detect"
-            ToolMode.DEOBFUSCATE -> "Deobfuscate"
-            ToolMode.OBFUSCATE -> "Obfuscate"
-            ToolMode.BEAUTIFY -> "Beautify"
-            ToolMode.SETTINGS -> "Settings"
+            ToolMode.DETECT -> "Nhận diện"
+            ToolMode.DEOBFUSCATE -> "Giải mã"
+            ToolMode.OBFUSCATE -> "Mã hóa"
+            ToolMode.BEAUTIFY -> "Làm đẹp"
+            ToolMode.SETTINGS -> "Cài đặt"
         }
 
         val fragment: Fragment = if (mode == ToolMode.SETTINGS) {

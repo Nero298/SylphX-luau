@@ -24,299 +24,51 @@
         android:layout_height="match_parent"
         android:background="@color/overlay_scrim" />
 
-    <!-- Fixed landscape shell: sidebar (left) + main content (right). No page-level scrolling. -->
+    <!-- Mobile-first vertical shell: header on top, scrollable content in the
+         middle, bottom navigation bar replaces the old desktop-style sidebar. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <!-- Sidebar -->
+        <!-- Header: big wordmark logo as the hero element, no more tiny icon -->
         <LinearLayout
-            android:layout_width="88dp"
-            android:layout_height="match_parent"
-            android:background="@color/sidebar_bg"
-            android:orientation="vertical"
-            android:paddingTop="14dp"
-            android:paddingBottom="16dp"
-            android:elevation="4dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/surface"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="14dp"
+            android:elevation="3dp">
 
-            <!-- Logo mascot -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_gravity="center_horizontal"
-                app:cardCornerRadius="26dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1.5dp"
-                app:strokeColor="@color/accent_cyan_dim"
-                app:cardBackgroundColor="@color/icon_bg">
-
-                <ImageView
-                    android:id="@+id/sidebarMascot"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/logo_mascot_round"
-                    android:contentDescription="@null" />
-            </com.google.android.material.card.MaterialCardView>
-
-            <View
-                android:layout_width="36dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/divider" />
-
-            <FrameLayout
-                android:id="@+id/tabDetect"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/sidebar_item_bg">
-
-                <View
-                    android:id="@+id/glowDetect"
-                    android:layout_width="3dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:background="@drawable/sidebar_glow_bar" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="11dp">
-
-                    <ImageView
-                        android:id="@+id/iconDetect"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ic_tab_detect"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/labelDetect"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Detect"
-                        android:textColor="@color/sidebar_label_tint"
-                        android:textSize="9.5sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/tabDeobfuscate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/sidebar_item_bg">
-
-                <View
-                    android:id="@+id/glowDeobfuscate"
-                    android:layout_width="3dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:background="@drawable/sidebar_glow_bar" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="11dp">
-
-                    <ImageView
-                        android:id="@+id/iconDeobfuscate"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ic_tab_deobfuscate"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/labelDeobfuscate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Deobf"
-                        android:textColor="@color/sidebar_label_tint"
-                        android:textSize="9.5sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/tabObfuscate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/sidebar_item_bg">
-
-                <View
-                    android:id="@+id/glowObfuscate"
-                    android:layout_width="3dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:background="@drawable/sidebar_glow_bar" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="11dp">
-
-                    <ImageView
-                        android:id="@+id/iconObfuscate"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ic_tab_obfuscate"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/labelObfuscate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Obf"
-                        android:textColor="@color/sidebar_label_tint"
-                        android:textSize="9.5sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/tabBeautify"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/sidebar_item_bg">
-
-                <View
-                    android:id="@+id/glowBeautify"
-                    android:layout_width="3dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:background="@drawable/sidebar_glow_bar" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="11dp">
-
-                    <ImageView
-                        android:id="@+id/iconBeautify"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ic_tab_beautify"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/labelBeautify"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Beauty"
-                        android:textColor="@color/sidebar_label_tint"
-                        android:textSize="9.5sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </FrameLayout>
+            <ImageView
+                android:layout_width="125dp"
+                android:layout_height="72dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:src="@drawable/logo_wordmark"
+                android:contentDescription="@null" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <FrameLayout
-                android:id="@+id/tabSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:background="@drawable/sidebar_item_bg">
-
-                <View
-                    android:id="@+id/glowSettings"
-                    android:layout_width="3dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:background="@drawable/sidebar_glow_bar" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="11dp">
-
-                    <ImageView
-                        android:id="@+id/iconSettings"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ic_tab_settings"
-                        app:tint="@color/sidebar_icon_tint"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/labelSettings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Settings"
-                        android:textColor="@color/sidebar_label_tint"
-                        android:textSize="9.5sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <!-- Main content column -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <!-- Top header: wordmark logo at true aspect ratio (no more tiny squished logo) -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:background="@color/surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/status_pill_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="20dp"
-                android:elevation="2dp">
-
-                <ImageView
-                    android:layout_width="88dp"
-                    android:layout_height="48dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/logo_wordmark"
-                    android:contentDescription="@null" />
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="7dp">
 
                 <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_marginEnd="7dp"
                     android:background="@drawable/status_dot" />
 
                 <TextView
@@ -325,17 +77,205 @@
                     android:layout_height="wrap_content"
                     android:text="Detect"
                     android:textColor="@color/text_primary"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
-            <!-- Fragment container: fixed, no outer scrolling -->
+        </LinearLayout>
+
+        <!-- Fragment container: fills all remaining vertical space above the nav bar -->
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Bottom navigation bar: 5 destinations, mobile-native pattern -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_nav_bg"
+            android:elevation="8dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="6dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="12dp">
+
             <FrameLayout
-                android:id="@+id/fragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:id="@+id/tabDetect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bottom_nav_item_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:id="@+id/iconDetect"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_tab_detect"
+                        app:tint="@color/sidebar_icon_tint"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/labelDetect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Detect"
+                        android:textColor="@color/sidebar_label_tint"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/tabDeobfuscate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bottom_nav_item_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:id="@+id/iconDeobfuscate"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_tab_deobfuscate"
+                        app:tint="@color/sidebar_icon_tint"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/labelDeobfuscate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Deobf"
+                        android:textColor="@color/sidebar_label_tint"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/tabObfuscate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bottom_nav_item_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:id="@+id/iconObfuscate"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_tab_obfuscate"
+                        app:tint="@color/sidebar_icon_tint"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/labelObfuscate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Obf"
+                        android:textColor="@color/sidebar_label_tint"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/tabBeautify"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bottom_nav_item_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:id="@+id/iconBeautify"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_tab_beautify"
+                        app:tint="@color/sidebar_icon_tint"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/labelBeautify"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Beauty"
+                        android:textColor="@color/sidebar_label_tint"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/tabSettings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/bottom_nav_item_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <ImageView
+                        android:id="@+id/iconSettings"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_tab_settings"
+                        app:tint="@color/sidebar_icon_tint"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/labelSettings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Cài đặt"
+                        android:textColor="@color/sidebar_label_tint"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
 
         </LinearLayout>
 

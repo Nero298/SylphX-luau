@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
+import com.google.android.material.tabs.TabLayout
 import com.sylphx.luau.databinding.FragmentToolBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,6 +86,7 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         setupUrlFetch()
         setupPanelFocusGlow()
         setupRunButtonPulse()
+        setupIoTabs()
 
         binding.pickFileButton.setOnClickListener { launchFilePicker() }
         binding.runButton.setOnClickListener { runTool() }
@@ -127,6 +129,40 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
     private fun setupPanelFocusGlow() {
         binding.codeInput.setOnFocusChangeListener { _, hasFocus ->
             binding.inputPanelFrame.isActivated = hasFocus
+        }
+    }
+
+    /** Drives the segmented Input/Output tab switch: only one panel group is
+     *  visible at a time, with a quick cross-fade between them. */
+    private fun setupIoTabs() {
+        binding.ioTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                showIoPanel(isOutput = tab.position == 1)
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+    }
+
+    private fun showIoPanel(isOutput: Boolean) {
+        val showing = if (isOutput) binding.outputPanelGroup else binding.inputPanelGroup
+        val hiding = if (isOutput) binding.inputPanelGroup else binding.outputPanelGroup
+
+        if (showing.visibility == View.VISIBLE) return
+
+        showing.alpha = 0f
+        showing.visibility = View.VISIBLE
+        showing.animate().alpha(1f).setDuration(160).start()
+        hiding.animate().alpha(0f).setDuration(120).withEndAction {
+            hiding.visibility = View.GONE
+            hiding.alpha = 1f
+        }.start()
+    }
+
+    /** Jumps to the Output tab (e.g. right after a run finishes) with the same animated switch. */
+    private fun switchToOutputTab() {
+        if (binding.ioTabLayout.selectedTabPosition != 1) {
+            binding.ioTabLayout.getTabAt(1)?.select()
         }
     }
 
@@ -362,6 +398,7 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
     }
 
     private fun renderResult(result: LeakDApi.ApiResult) {
+        switchToOutputTab()
         if (result.success) {
             binding.resultOutput.setText(result.message)
             binding.statusLabel.setTextColor(resources.getColor(R.color.accent_lime, null))
