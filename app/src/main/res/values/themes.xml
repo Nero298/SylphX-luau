@@ -7,5 +7,24 @@
         <item name="android:windowBackground">@color/bg_dark</item>
         <item name="android:statusBarColor">@color/bg_dark</item>
         <item name="android:navigationBarColor">@color/bg_dark</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Preset/engine selector pill. Selected = filled mint with glow stroke.
+         Unselected = flat surface with subtle border. Fully custom (no Material
+         Chip defaults) so every state is intentional and on-theme. -->
+    <style name="Widget.SylPhX.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_selector_bg</item>
+        <item name="chipStrokeColor">@color/chip_selector_stroke</item>
+        <item name="chipStrokeWidth">1.4dp</item>
+        <item name="chipCornerRadius">18dp</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="chipStartPadding">14dp</item>
+        <item name="chipEndPadding">14dp</item>
+        <item name="android:textColor">@color/chip_selector_text</item>
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="rippleColor">@color/ripple_cyan</item>
     </style>
 </resources>

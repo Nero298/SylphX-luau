@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Core dark navy/cyan palette -->
-    <color name="bg_dark">#060B14</color>
-    <color name="bg_panel">#0A1220</color>
-    <color name="surface">#0F1B2E</color>
-    <color name="surface_raised">#152438</color>
-    <color name="sidebar_bg">#081019</color>
+    <!-- Modern Cyberpunk Dark palette: deep charcoal base + neon mint accent -->
+    <color name="bg_dark">#121212</color>
+    <color name="bg_panel">#1A1A1A</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="surface_raised">#2D2D2D</color>
+    <color name="sidebar_bg">#161616</color>
 
-    <color name="accent_cyan">#22D3EE</color>
-    <color name="accent_cyan_dim">#0E7490</color>
-    <color name="accent_blue">#3B82F6</color>
-    <color name="accent_lime">#B6FF3D</color>
+    <color name="accent_cyan">#00E676</color>
+    <color name="accent_cyan_dim">#00A65A</color>
+    <color name="accent_blue">#00ADB5</color>
+    <color name="accent_lime">#00E676</color>
     <color name="accent_pink">#FF3D9A</color>
 
-    <color name="text_primary">#E6F6FB</color>
-    <color name="text_secondary">#7FA8BD</color>
-    <color name="text_muted">#4A6478</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#A0A0A0</color>
+    <color name="text_muted">#6B6B6B</color>
 
     <color name="error_red">#FF5C5C</color>
-    <color name="success_green">#3DFF8C</color>
+    <color name="success_green">#00E676</color>
 
-    <color name="border_subtle">#1A2C40</color>
-    <color name="divider">#16283B</color>
-    <color name="overlay_scrim">#CC060B14</color>
-    <color name="chip_bg">#0F2233</color>
-    <color name="icon_bg">#061018</color>
+    <color name="border_subtle">#333333</color>
+    <color name="divider">#2A2A2A</color>
+    <color name="overlay_scrim">#CC121212</color>
+    <color name="chip_bg">#2D2D2D</color>
+    <color name="icon_bg">#1A1A1A</color>
 
     <!-- Sidebar icon tint states -->
-    <color name="icon_inactive">#5A7C90</color>
-    <color name="icon_active">#22D3EE</color>
+    <color name="icon_inactive">#6B6B6B</color>
+    <color name="icon_active">#00E676</color>
 
     <!-- Button ripple / pressed overlays -->
-    <color name="ripple_cyan">#3322D3EE</color>
+    <color name="ripple_cyan">#3300E676</color>
     <color name="ripple_light">#22FFFFFF</color>
-    <color name="run_btn_pressed">#0E7490</color>
+    <color name="run_btn_pressed">#00A65A</color>
 
     <!-- Sidebar glow indicator -->
-    <color name="sidebar_glow">#4022D3EE</color>
+    <color name="sidebar_glow">#4000E676</color>
+
+    <!-- Chip (preset/engine selector) states -->
+    <color name="chip_selected_bg">#1A2D24</color>
+    <color name="chip_selected_stroke">#00E676</color>
+    <color name="chip_unselected_bg">#2D2D2D</color>
+    <color name="chip_unselected_stroke">#3A3A3A</color>
 </resources>

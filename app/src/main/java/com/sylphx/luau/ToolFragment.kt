@@ -100,6 +100,15 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         ).forEach { applyPressScale(it) }
     }
 
+    /** Quick "pop" feedback when a preset/engine chip becomes selected. */
+    private fun animateChipSelect(chip: Chip) {
+        chip.animate().cancel()
+        chip.scaleX = 0.9f
+        chip.scaleY = 0.9f
+        chip.animate().scaleX(1f).scaleY(1f).setDuration(180)
+            .setInterpolator(android.view.animation.OvershootInterpolator(2.5f)).start()
+    }
+
     /** Scale-down-on-press feedback for toolbar buttons, on top of their ripple background. */
     @Suppress("ClickableViewAccessibility")
     private fun applyPressScale(view: View) {
@@ -159,11 +168,18 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
                 binding.chipScrollView.visibility = android.view.View.VISIBLE
                 binding.presetChipGroup.removeAllViews()
                 obfuscatePresets.forEachIndexed { index, preset ->
-                    val chip = Chip(requireContext()).apply {
+                    val chip = Chip(requireContext(), null, 0).apply chipInit@{
+                        setChipDrawable(com.google.android.material.chip.ChipDrawable.createFromAttributes(
+                            requireContext(), null, 0, R.style.Widget_SylPhX_Chip
+                        ))
                         text = preset
                         isCheckable = true
                         isChecked = index == 0
-                        setOnClickListener { selectedPreset = preset }
+                        setEnsureMinTouchTargetSize(false)
+                        setOnClickListener {
+                            selectedPreset = preset
+                            animateChipSelect(this@chipInit)
+                        }
                     }
                     binding.presetChipGroup.addView(chip)
                 }
@@ -172,11 +188,18 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
                 binding.chipScrollView.visibility = android.view.View.VISIBLE
                 binding.presetChipGroup.removeAllViews()
                 deobfEngines.forEachIndexed { index, (label, endpoint) ->
-                    val chip = Chip(requireContext()).apply {
+                    val chip = Chip(requireContext(), null, 0).apply chipInit@{
+                        setChipDrawable(com.google.android.material.chip.ChipDrawable.createFromAttributes(
+                            requireContext(), null, 0, R.style.Widget_SylPhX_Chip
+                        ))
                         text = label
                         isCheckable = true
                         isChecked = index == 0
-                        setOnClickListener { selectedDeobfEngine = endpoint }
+                        setEnsureMinTouchTargetSize(false)
+                        setOnClickListener {
+                            selectedDeobfEngine = endpoint
+                            animateChipSelect(this@chipInit)
+                        }
                     }
                     binding.presetChipGroup.addView(chip)
                 }
