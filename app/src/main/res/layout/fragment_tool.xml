@@ -4,166 +4,152 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingTop="14dp"
-    android:paddingBottom="12dp">
+    android:paddingHorizontal="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
-    <!-- Preset/engine selector: horizontally scrolling large cards with icon +
-         label, replacing the old flat Material Chip row. Only shown on
-         Obfuscate/Deobfuscate. Each card pops with a scale+glow animation
-         when selected (see ToolFragment.animateChipSelect). -->
-    <HorizontalScrollView
-        android:id="@+id/chipScrollView"
+    <!-- Engine selector: single line "engines || <current>". Tapping the
+         current engine name opens a popup menu to switch engines. Only
+         shown on Obfuscate/Deobfuscate. -->
+    <LinearLayout
+        android:id="@+id/engineRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:clipToPadding="false"
-        android:paddingHorizontal="2dp"
-        android:scrollbars="none"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/engine_row_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
         android:visibility="gone">
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:fontFamily="monospace"
+            android:text="engines ||"
+            android:textColor="@color/text_muted"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="monospace"
-                android:text="engines ||"
-                android:textColor="@color/text_muted"
-                android:textSize="11.5sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/engineSelector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
+            android:text="moonsec"
+            android:textColor="@color/accent_cyan"
+            android:textSize="12.5sp"
+            android:textStyle="bold" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/presetChipGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="10dp"
-                app:singleLine="true"
-                app:singleSelection="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="v"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/detectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/detect_btn_bg"
-                android:gravity="center"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:minWidth="0dp"
-                android:paddingHorizontal="18dp"
-                android:text="[?] Nhận diện loại"
-                android:textAllCaps="false"
-                android:textColor="@color/bg_dark"
-                android:textSize="12.5sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+    </LinearLayout>
 
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <!-- Segmented Input/Output switch: one full-width card at a time instead
-         of two cramped side-by-side columns — much easier to read code on a
-         phone screen. -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/ioTabLayout"
+    <!-- Detect-only button, shown only on Obfuscate tab -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/detectButton"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/io_tab_bg"
-        app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:tabIndicator="@null"
-        app:tabRippleColor="@android:color/transparent"
-        app:tabBackground="@android:color/transparent"
-        app:tabPaddingStart="0dp"
-        app:tabPaddingEnd="0dp">
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/detect_btn_bg"
+        android:gravity="center"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="0dp"
+        android:paddingHorizontal="18dp"
+        android:text="[?] Nhận diện loại"
+        android:textAllCaps="false"
+        android:textColor="@color/bg_dark"
+        android:textSize="12.5sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&lt;in&gt; Input" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&lt;out&gt; Output" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <!-- Single full-width stage: only one of Input/Output panel groups is
-         visible at a time, toggled by ioTabLayout (see ToolFragment.setupIoTabs). -->
-    <FrameLayout
+    <!-- INPUT + OUTPUT stacked vertically, both visible at once, sharing
+         the remaining screen space evenly. -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <!-- INPUT PANEL GROUP -->
+        <!-- INPUT PANEL -->
         <LinearLayout
-            android:id="@+id/inputPanelGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Input toolbar: Clear | Upload | URL field -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:text="&lt;in&gt; input"
+                    android:textColor="@color/text_muted"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/clearInputButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/toolbar_btn_bg"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
-                    android:paddingHorizontal="14dp"
+                    android:paddingHorizontal="10dp"
                     android:text="[x] Xóa"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp" />
+                    android:textSize="10.5sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/pickFileButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="6dp"
                     android:background="@drawable/toolbar_btn_bg"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
-                    android:paddingHorizontal="14dp"
+                    android:paddingHorizontal="10dp"
                     android:text="[^] Tải file"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp" />
+                    android:textSize="10.5sp" />
 
             </LinearLayout>
 
             <EditText
                 android:id="@+id/urlInput"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:background="@drawable/url_input_bg"
                 android:hint="#: Dán URL raw code, nhấn Enter…"
                 android:imeOptions="actionGo"
                 android:inputType="textUri"
                 android:maxLines="1"
-                android:paddingHorizontal="14dp"
+                android:paddingHorizontal="12dp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_muted"
-                android:textSize="12.5sp" />
+                android:textSize="11sp" />
 
             <FrameLayout
                 android:id="@+id/inputPanelFrame"
@@ -186,99 +172,105 @@
                         android:background="@android:color/transparent"
                         android:fontFamily="monospace"
                         android:gravity="top|start"
-                        android:hint="Dán code vào đây..."
+                        android:hint=""
                         android:inputType="textMultiLine|textNoSuggestions"
-                        android:minHeight="260dp"
-                        android:padding="14dp"
+                        android:minHeight="90dp"
+                        android:padding="10dp"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
-                        android:textSize="12.5sp" />
+                        android:textSize="11.5sp" />
 
                 </ScrollView>
 
-                <!-- Floating file/URL status chip, overlaid so it never changes the panel's height -->
                 <TextView
                     android:id="@+id/pickedFileLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|start"
-                    android:layout_margin="10dp"
+                    android:layout_margin="8dp"
                     android:background="@drawable/floating_chip_bg"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
                     android:text=""
                     android:textColor="@color/accent_cyan"
-                    android:textSize="10.5sp"
+                    android:textSize="9.5sp"
                     android:visibility="gone" />
 
             </FrameLayout>
 
         </LinearLayout>
 
-        <!-- OUTPUT PANEL GROUP -->
-        <LinearLayout
-            android:id="@+id/outputPanelGroup"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_height="8dp" />
 
-            <!-- Output toolbar: Clear | Copy | Download -->
+        <!-- OUTPUT PANEL -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:text="&lt;out&gt; output"
+                    android:textColor="@color/text_muted"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/clearOutputButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/toolbar_btn_bg"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
-                    android:paddingHorizontal="14dp"
+                    android:paddingHorizontal="10dp"
                     android:text="[x] Xóa"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp" />
+                    android:textSize="10.5sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/copyButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="6dp"
                     android:background="@drawable/toolbar_btn_bg"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
-                    android:paddingHorizontal="14dp"
+                    android:paddingHorizontal="10dp"
                     android:text="[::] Copy"
                     android:textAllCaps="false"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:textSize="10.5sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/saveButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="6dp"
                     android:background="@drawable/toolbar_btn_bg_accent"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
-                    android:paddingHorizontal="14dp"
+                    android:paddingHorizontal="10dp"
                     android:text="[v] Tải xuống"
                     android:textAllCaps="false"
                     android:textColor="@color/accent_cyan"
                     android:textStyle="bold"
-                    android:textSize="12sp" />
+                    android:textSize="10.5sp" />
 
             </LinearLayout>
 
@@ -287,6 +279,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/panel_bg"
                 android:padding="1dp">
 
@@ -305,31 +298,30 @@
                         android:focusable="false"
                         android:fontFamily="monospace"
                         android:gravity="top|start"
-                        android:hint="Kết quả sẽ hiện ở đây..."
+                        android:hint="-- Kết quả sẽ hiện ở đây..."
                         android:inputType="textMultiLine|textNoSuggestions"
-                        android:minHeight="260dp"
-                        android:padding="14dp"
+                        android:minHeight="90dp"
+                        android:padding="10dp"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
                         android:textIsSelectable="true"
-                        android:textSize="12.5sp" />
+                        android:textSize="11.5sp" />
 
                 </ScrollView>
 
-                <!-- Loading skeleton shown while a request is running -->
                 <LinearLayout
                     android:id="@+id/outputLoadingSkeleton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/bg_panel"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginBottom="12dp"
+                        android:layout_height="10dp"
+                        android:layout_marginBottom="10dp"
                         android:orientation="horizontal"
                         android:weightSum="1">
                         <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.80" android:background="@drawable/skeleton_bar" />
@@ -338,8 +330,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginBottom="12dp"
+                        android:layout_height="10dp"
+                        android:layout_marginBottom="10dp"
                         android:orientation="horizontal"
                         android:weightSum="1">
                         <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.60" android:background="@drawable/skeleton_bar" />
@@ -348,61 +340,40 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginBottom="12dp"
+                        android:layout_height="10dp"
                         android:orientation="horizontal"
                         android:weightSum="1">
                         <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.90" android:background="@drawable/skeleton_bar" />
                         <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.10" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
-                        <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.45" android:background="@drawable/skeleton_bar" />
-                        <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.55" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="12dp"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
-                        <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.70" android:background="@drawable/skeleton_bar" />
-                        <View android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.30" />
-                    </LinearLayout>
-
                 </LinearLayout>
 
-                <!-- Floating status chip mirrors Input's file-status chip -->
                 <TextView
                     android:id="@+id/outputSizeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|start"
-                    android:layout_margin="10dp"
+                    android:layout_margin="8dp"
                     android:background="@drawable/floating_chip_bg"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
                     android:text=""
                     android:textColor="@color/accent_lime"
-                    android:textSize="10.5sp"
+                    android:textSize="9.5sp"
                     android:visibility="gone" />
 
             </FrameLayout>
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
     <!-- Bottom status/run bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -413,11 +384,11 @@
             android:layout_weight="1"
             android:layout_marginEnd="10dp"
             android:textColor="@color/accent_lime"
-            android:textSize="12.5sp" />
+            android:textSize="11.5sp" />
 
         <FrameLayout
-            android:layout_width="170dp"
-            android:layout_height="50dp">
+            android:layout_width="150dp"
+            android:layout_height="44dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/runButton"
@@ -429,14 +400,14 @@
                 android:text="&gt; Chạy"
                 android:textAllCaps="false"
                 android:textColor="@color/bg_dark"
-                android:textSize="14.5sp"
+                android:textSize="13.5sp"
                 android:textStyle="bold" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleSmall"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:indeterminateTint="@color/bg_dark"
                 android:visibility="gone" />

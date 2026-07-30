@@ -28,30 +28,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header: mascot avatar + enlarged wordmark on the left, WIP badge top-right -->
+        <!-- Header: compact mascot + wordmark hugging the top-left corner, WIP badge top-right -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/surface"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="12dp"
+            android:paddingHorizontal="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:elevation="3dp">
 
             <ImageView
                 android:id="@+id/mascotLogo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="6dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/logo_mascot_round"
                 android:contentDescription="@null" />
 
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="86dp"
+                android:layout_width="126dp"
+                android:layout_height="36dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
                 android:src="@drawable/logo_wordmark"
@@ -68,8 +68,8 @@
                 android:background="@drawable/wip_badge_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp">
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp">
 
                 <TextView
                     android:layout_width="wrap_content"

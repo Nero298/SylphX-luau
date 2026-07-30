@@ -17,10 +17,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.chip.Chip
-import com.google.android.material.tabs.TabLayout
 import com.sylphx.luau.databinding.FragmentToolBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,7 +85,6 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         setupUrlFetch()
         setupPanelFocusGlow()
         setupRunButtonPulse()
-        setupIoTabs()
 
         binding.pickFileButton.setOnClickListener { launchFilePicker() }
         binding.runButton.setOnClickListener { runTool() }
@@ -102,12 +100,12 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         ).forEach { applyPressScale(it) }
     }
 
-    /** Quick "pop" feedback when a preset/engine chip becomes selected. */
-    private fun animateChipSelect(chip: Chip) {
-        chip.animate().cancel()
-        chip.scaleX = 0.9f
-        chip.scaleY = 0.9f
-        chip.animate().scaleX(1f).scaleY(1f).setDuration(180)
+    /** Small "pop" feedback when the engine selector text is tapped. */
+    private fun animateEngineTap() {
+        binding.engineSelector.animate().cancel()
+        binding.engineSelector.scaleX = 0.94f
+        binding.engineSelector.scaleY = 0.94f
+        binding.engineSelector.animate().scaleX(1f).scaleY(1f).setDuration(160)
             .setInterpolator(android.view.animation.OvershootInterpolator(2.5f)).start()
     }
 
@@ -132,38 +130,10 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         }
     }
 
-    /** Drives the segmented Input/Output tab switch: only one panel group is
-     *  visible at a time, with a quick cross-fade between them. */
-    private fun setupIoTabs() {
-        binding.ioTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                showIoPanel(isOutput = tab.position == 1)
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
-    }
-
-    private fun showIoPanel(isOutput: Boolean) {
-        val showing = if (isOutput) binding.outputPanelGroup else binding.inputPanelGroup
-        val hiding = if (isOutput) binding.inputPanelGroup else binding.outputPanelGroup
-
-        if (showing.visibility == View.VISIBLE) return
-
-        showing.alpha = 0f
-        showing.visibility = View.VISIBLE
-        showing.animate().alpha(1f).setDuration(160).start()
-        hiding.animate().alpha(0f).setDuration(120).withEndAction {
-            hiding.visibility = View.GONE
-            hiding.alpha = 1f
-        }.start()
-    }
-
-    /** Jumps to the Output tab (e.g. right after a run finishes) with the same animated switch. */
+    /** Both Input and Output panels are always visible now (stacked), so
+     *  there is nothing to switch here — kept as a no-op for call sites. */
     private fun switchToOutputTab() {
-        if (binding.ioTabLayout.selectedTabPosition != 1) {
-            binding.ioTabLayout.getTabAt(1)?.select()
-        }
+        // no-op: both panels are always shown at once
     }
 
     private var runPulseAnimator: ValueAnimator? = null
@@ -201,49 +171,50 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
     private fun setupChipsForMode() {
         when (mode) {
             ToolMode.OBFUSCATE -> {
-                binding.chipScrollView.visibility = android.view.View.VISIBLE
-                binding.presetChipGroup.removeAllViews()
-                obfuscatePresets.forEachIndexed { index, preset ->
-                    val chip = Chip(requireContext(), null, 0).apply chipInit@{
-                        setChipDrawable(com.google.android.material.chip.ChipDrawable.createFromAttributes(
-                            requireContext(), null, 0, R.style.Widget_SylPhX_Chip
-                        ))
-                        text = preset
-                        isCheckable = true
-                        isChecked = index == 0
-                        setEnsureMinTouchTargetSize(false)
-                        setOnClickListener {
-                            selectedPreset = preset
-                            animateChipSelect(this@chipInit)
-                        }
-                    }
-                    binding.presetChipGroup.addView(chip)
-                }
+                binding.engineRow.visibility = View.VISIBLE
+                selectedPreset = obfuscatePresets.first()
+                binding.engineSelector.text = selectedPreset
+                binding.engineRow.setOnClickListener { showObfuscatePresetMenu() }
             }
             ToolMode.DEOBFUSCATE -> {
-                binding.chipScrollView.visibility = android.view.View.VISIBLE
-                binding.presetChipGroup.removeAllViews()
-                deobfEngines.forEachIndexed { index, (label, endpoint) ->
-                    val chip = Chip(requireContext(), null, 0).apply chipInit@{
-                        setChipDrawable(com.google.android.material.chip.ChipDrawable.createFromAttributes(
-                            requireContext(), null, 0, R.style.Widget_SylPhX_Chip
-                        ))
-                        text = label
-                        isCheckable = true
-                        isChecked = index == 0
-                        setEnsureMinTouchTargetSize(false)
-                        setOnClickListener {
-                            selectedDeobfEngine = endpoint
-                            animateChipSelect(this@chipInit)
-                        }
-                    }
-                    binding.presetChipGroup.addView(chip)
-                }
+                binding.engineRow.visibility = View.VISIBLE
+                val (firstLabel, firstEndpoint) = deobfEngines.first()
+                selectedDeobfEngine = firstEndpoint
+                binding.engineSelector.text = firstLabel.lowercase()
+                binding.engineRow.setOnClickListener { showDeobfEngineMenu() }
             }
             else -> {
-                binding.chipScrollView.visibility = android.view.View.GONE
+                binding.engineRow.visibility = View.GONE
             }
         }
+    }
+
+    /** Popup menu of obfuscate presets, anchored to the engine row. */
+    private fun showObfuscatePresetMenu() {
+        val popup = PopupMenu(requireContext(), binding.engineSelector)
+        obfuscatePresets.forEach { preset -> popup.menu.add(preset) }
+        popup.setOnMenuItemClickListener { item ->
+            selectedPreset = item.title.toString()
+            binding.engineSelector.text = selectedPreset
+            animateEngineTap()
+            true
+        }
+        popup.show()
+    }
+
+    /** Popup menu of deobfuscate engines, anchored to the engine row. */
+    private fun showDeobfEngineMenu() {
+        val popup = PopupMenu(requireContext(), binding.engineSelector)
+        deobfEngines.forEach { (label, _) -> popup.menu.add(label) }
+        popup.setOnMenuItemClickListener { item ->
+            val label = item.title.toString()
+            val endpoint = deobfEngines.first { it.first == label }.second
+            selectedDeobfEngine = endpoint
+            binding.engineSelector.text = label.lowercase()
+            animateEngineTap()
+            true
+        }
+        popup.show()
     }
 
     /** URL field: user pastes a raw-code URL and hits Enter to fetch its contents into the input box. */
