@@ -1,6 +1,8 @@
 package com.sylphx.luau
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +16,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var currentMode: ToolMode = ToolMode.DETECT
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private var pendingTabSwitch: Runnable? = null
+
+    /** Left-to-right order of the bottom-nav tabs, used to pick the slide direction. */
+    private val tabOrder = listOf(
+        ToolMode.DETECT, ToolMode.DEOBFUSCATE, ToolMode.OBFUSCATE, ToolMode.BEAUTIFY, ToolMode.SETTINGS
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectTab(mode: ToolMode, animateTab: Boolean) {
+        val previousMode = currentMode
         currentMode = mode
 
         binding.tabDetect.isSelected = mode == ToolMode.DETECT
@@ -68,20 +78,42 @@ class MainActivity : AppCompatActivity() {
         binding.labelBeautify.isSelected = mode == ToolMode.BEAUTIFY
         binding.labelSettings.isSelected = mode == ToolMode.SETTINGS
 
-        val fragment: Fragment = if (mode == ToolMode.SETTINGS) {
-            SettingsFragment()
-        } else {
-            ToolFragment.newInstance(mode)
-        }
+        pendingTabSwitch?.let { mainHandler.removeCallbacks(it) }
 
-        val transaction = supportFragmentManager.beginTransaction()
-        if (animateTab) {
-            transaction.setCustomAnimations(
-                R.anim.fragment_fade_slide_in,
-                R.anim.fragment_fade_slide_out
-            )
+        val swap = Runnable {
+            val fragment: Fragment = if (mode == ToolMode.SETTINGS) {
+                SettingsFragment()
+            } else {
+                ToolFragment.newInstance(mode)
+            }
+
+            val transaction = supportFragmentManager.beginTransaction()
+            if (animateTab) {
+                val movingForward = tabOrder.indexOf(mode) > tabOrder.indexOf(previousMode)
+                if (movingForward) {
+                    transaction.setCustomAnimations(
+                        R.anim.fragment_slide_in_right,
+                        R.anim.fragment_slide_out_left
+                    )
+                } else {
+                    transaction.setCustomAnimations(
+                        R.anim.fragment_slide_in_left,
+                        R.anim.fragment_slide_out_right
+                    )
+                }
+            }
+            transaction.replace(R.id.fragmentContainer, fragment).commit()
         }
-        transaction.replace(R.id.fragmentContainer, fragment).commit()
+        pendingTabSwitch = swap
+
+        // Tab selection state updates instantly; the actual content swap is
+        // deliberately held for ~1s so switching tabs feels like a real
+        // transition rather than an instant flash.
+        if (animateTab) {
+            mainHandler.postDelayed(swap, 1000L)
+        } else {
+            swap.run()
+        }
     }
 
     override fun onResume() {
@@ -105,5 +137,10 @@ class MainActivity : AppCompatActivity() {
             binding.animatedBackground.visibility = View.VISIBLE
             binding.animatedBackground.setTheme(ThemeManager.getSelectedTheme(this))
         }
+    }
+
+    override fun onDestroy() {
+        pendingTabSwitch?.let { mainHandler.removeCallbacks(it) }
+        super.onDestroy()
     }
 }

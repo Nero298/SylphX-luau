@@ -65,9 +65,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             ThemeManager.setCustomBackgroundPath(requireContext(), outFile.absolutePath)
             (activity as? MainActivity)?.applyBackground()
             updateBackgroundStatusLabel()
-            Toast.makeText(requireContext(), "Đã đặt ảnh nền", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Background image applied", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Lỗi tải ảnh: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Failed to load image: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -75,15 +75,15 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         ThemeManager.clearCustomBackground(requireContext())
         (activity as? MainActivity)?.applyBackground()
         updateBackgroundStatusLabel()
-        Toast.makeText(requireContext(), "Đã xóa ảnh nền, dùng theme mặc định", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Background image cleared, using default theme", Toast.LENGTH_SHORT).show()
     }
 
     private fun updateBackgroundStatusLabel() {
         val path = ThemeManager.getCustomBackgroundPath(requireContext())
         binding.backgroundStatusLabel.text = if (path != null) {
-            "Đang dùng ảnh nền tùy chỉnh"
+            "Using custom background image"
         } else {
-            "Chưa có ảnh nền tùy chỉnh — đang dùng theme động"
+            "No custom background set — using animated theme"
         }
     }
 

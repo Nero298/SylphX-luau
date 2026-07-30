@@ -3,23 +3,26 @@
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/surface_raised" />
-            <corners android:radius="14dp" />
+            <corners android:radius="12dp" />
+            <stroke android:width="1.2dp" android:color="@color/border_subtle" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/run_btn_pressed" />
-            <corners android:radius="14dp" />
+            <corners android:radius="12dp" />
+            <stroke android:width="1.4dp" android:color="@color/cyan_100" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:angle="45"
-                android:startColor="@color/accent_cyan"
-                android:centerColor="@color/accent_blue"
-                android:endColor="@color/accent_cyan" />
-            <corners android:radius="14dp" />
+                android:startColor="@color/cyan_400"
+                android:centerColor="@color/accent_cyan"
+                android:endColor="@color/cyan_600" />
+            <corners android:radius="12dp" />
+            <stroke android:width="1.4dp" android:color="@color/cyan_200" />
         </shape>
     </item>
 </selector>

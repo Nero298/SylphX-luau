@@ -74,20 +74,20 @@ object LeakDApi {
                 parseResponse(response.body?.string().orEmpty(), endpoint)
             }
         } catch (e: Exception) {
-            ApiResult(success = false, message = "Lỗi kết nối: ${e.message}")
+            ApiResult(success = false, message = "Connection error: ${e.message}")
         }
     }
 
     private fun parseResponse(raw: String, endpoint: Endpoint): ApiResult {
         if (raw.isBlank()) {
-            return ApiResult(success = false, message = "Server trả về rỗng.")
+            return ApiResult(success = false, message = "Server returned an empty response.")
         }
         return try {
             val obj = JSONObject(raw)
             val success = obj.optBoolean("success", false)
 
             if (!success) {
-                val err = obj.optString("error", "Lỗi không xác định")
+                val err = obj.optString("error", "Unknown error")
                 val presetsArr = obj.optJSONArray("presets")
                 val presetsList = presetsArr?.let { arr ->
                     (0 until arr.length()).map { arr.getString(it) }
@@ -103,7 +103,7 @@ object LeakDApi {
                     ApiResult(
                         success = true,
                         message = name,
-                        extra = "Độ tin cậy: $confidence%"
+                        extra = "Confidence: $confidence%"
                     )
                 }
                 Endpoint.BEAUTIFY -> {
@@ -112,7 +112,7 @@ object LeakDApi {
                     ApiResult(
                         success = true,
                         message = obj.optString("beautified_code", ""),
-                        extra = ratio?.let { "Tỉ lệ: ${"%.1f".format(it)}%" }
+                        extra = ratio?.let { "Ratio: ${"%.1f".format(it)}%" }
                     )
                 }
                 Endpoint.OBFUSCATE -> {
@@ -124,7 +124,7 @@ object LeakDApi {
                         message = obj.optString("obfuscated_code", ""),
                         extra = buildString {
                             append("Preset: $presetUsed")
-                            ratio?.let { append(" • Tỉ lệ: ${"%.1f".format(it)}%") }
+                            ratio?.let { append(" • Ratio: ${"%.1f".format(it)}%") }
                         }
                     )
                 }
@@ -140,7 +140,7 @@ object LeakDApi {
                 }
             }
         } catch (e: Exception) {
-            ApiResult(success = false, message = "Không đọc được phản hồi: ${e.message}")
+            ApiResult(success = false, message = "Failed to parse response: ${e.message}")
         }
     }
 }

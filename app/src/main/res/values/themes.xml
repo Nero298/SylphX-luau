@@ -8,26 +8,14 @@
         <item name="android:statusBarColor">@color/bg_dark</item>
         <item name="android:navigationBarColor">@color/bg_dark</item>
         <item name="android:fontFamily">sans-serif</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.SylPhX.BottomSheet</item>
     </style>
 
-    <!-- Preset/engine selector card. Selected = filled mint with glow stroke +
-         checkmark icon. Unselected = flat surface with subtle border. Sized
-         like a small selectable card, not a thin pill, so it reads clearly
-         on a phone screen. -->
-    <style name="Widget.SylPhX.Chip" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/chip_selector_bg</item>
-        <item name="chipStrokeColor">@color/chip_selector_stroke</item>
-        <item name="chipStrokeWidth">1.6dp</item>
-        <item name="chipCornerRadius">16dp</item>
-        <item name="chipMinHeight">46dp</item>
-        <item name="chipStartPadding">16dp</item>
-        <item name="chipEndPadding">16dp</item>
-        <item name="android:textColor">@color/chip_selector_text</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="checkedIcon">@drawable/ic_chip_check</item>
-        <item name="checkedIconVisible">true</item>
-        <item name="checkedIconTint">@color/accent_cyan</item>
-        <item name="rippleColor">@color/ripple_cyan</item>
+    <style name="ThemeOverlay.SylPhX.BottomSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.SylPhX.BottomSheet</item>
+    </style>
+
+    <style name="Widget.SylPhX.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>

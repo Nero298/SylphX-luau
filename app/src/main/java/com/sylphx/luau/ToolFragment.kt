@@ -17,7 +17,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.PopupMenu
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.sylphx.luau.databinding.FragmentToolBinding
@@ -154,10 +154,10 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
 
     private fun setupInputHint() {
         binding.codeInput.hint = when (mode) {
-            ToolMode.DETECT -> "Dán code muốn nhận diện loại obfuscator..."
-            ToolMode.DEOBFUSCATE -> "Dán code đã bị obfuscate vào đây..."
-            ToolMode.OBFUSCATE -> "Dán code Lua gốc muốn obfuscate..."
-            ToolMode.BEAUTIFY -> "Dán code Lua muốn làm đẹp (format lại)..."
+            ToolMode.DETECT -> "Paste the code to detect its obfuscator type..."
+            ToolMode.DEOBFUSCATE -> "Paste the obfuscated code here..."
+            ToolMode.OBFUSCATE -> "Paste the original Lua code to obfuscate..."
+            ToolMode.BEAUTIFY -> "Paste the Lua code to beautify (reformat)..."
             ToolMode.SETTINGS -> ""
         }
     }
@@ -189,32 +189,62 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         }
     }
 
-    /** Popup menu of obfuscate presets, anchored to the engine row. */
+    /** Bottom sheet listing obfuscate presets, styled to match the app theme. */
     private fun showObfuscatePresetMenu() {
-        val popup = PopupMenu(requireContext(), binding.engineSelector)
-        obfuscatePresets.forEach { preset -> popup.menu.add(preset) }
-        popup.setOnMenuItemClickListener { item ->
-            selectedPreset = item.title.toString()
+        showEngineSheet(
+            options = obfuscatePresets,
+            currentLabel = selectedPreset
+        ) { chosen ->
+            selectedPreset = chosen
             binding.engineSelector.text = selectedPreset
             animateEngineTap()
-            true
         }
-        popup.show()
     }
 
-    /** Popup menu of deobfuscate engines, anchored to the engine row. */
+    /** Bottom sheet listing deobfuscate engines, styled to match the app theme. */
     private fun showDeobfEngineMenu() {
-        val popup = PopupMenu(requireContext(), binding.engineSelector)
-        deobfEngines.forEach { (label, _) -> popup.menu.add(label) }
-        popup.setOnMenuItemClickListener { item ->
-            val label = item.title.toString()
-            val endpoint = deobfEngines.first { it.first == label }.second
+        val currentLabel = deobfEngines.first { it.second == selectedDeobfEngine }.first
+        showEngineSheet(
+            options = deobfEngines.map { it.first },
+            currentLabel = currentLabel
+        ) { chosen ->
+            val endpoint = deobfEngines.first { it.first == chosen }.second
             selectedDeobfEngine = endpoint
-            binding.engineSelector.text = label.lowercase()
+            binding.engineSelector.text = chosen.lowercase()
             animateEngineTap()
-            true
         }
-        popup.show()
+    }
+
+    /** Shared bottom sheet UI for both preset and engine pickers: rounded card,
+     *  bordered rows, cyan highlight + checkmark on the active option. */
+    private fun showEngineSheet(
+        options: List<String>,
+        currentLabel: String,
+        onPicked: (String) -> Unit
+    ) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetView = layoutInflater.inflate(R.layout.sheet_engine_picker, null)
+        val container = sheetView.findViewById<android.widget.LinearLayout>(R.id.sheetOptionsContainer)
+
+        options.forEach { option ->
+            val row = layoutInflater.inflate(R.layout.item_engine_option, container, false)
+            val label = row.findViewById<android.widget.TextView>(R.id.engineOptionLabel)
+            val check = row.findViewById<android.widget.TextView>(R.id.engineOptionCheck)
+            val isSelected = option.equals(currentLabel, ignoreCase = true)
+
+            label.text = option
+            row.isSelected = isSelected
+            check.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
+
+            row.setOnClickListener {
+                onPicked(option)
+                dialog.dismiss()
+            }
+            container.addView(row)
+        }
+
+        dialog.setContentView(sheetView)
+        dialog.show()
     }
 
     /** URL field: user pastes a raw-code URL and hits Enter to fetch its contents into the input box. */
@@ -237,7 +267,7 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         if (url.isEmpty()) return
 
         binding.statusLabel.setTextColor(resources.getColor(R.color.text_secondary, null))
-        binding.statusLabel.text = "Đang tải nội dung từ URL..."
+        binding.statusLabel.text = "Fetching content from URL..."
 
         viewLifecycleOwner.lifecycleScope.launch {
             val fetched = withContext(Dispatchers.IO) {
@@ -253,11 +283,11 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
 
             if (fetched != null) {
                 binding.codeInput.setText(fetched)
-                showPickedFileLabel("Đã nạp code từ URL")
+                showPickedFileLabel("Code loaded from URL")
                 binding.statusLabel.text = ""
             } else {
                 binding.statusLabel.setTextColor(resources.getColor(R.color.error_red, null))
-                binding.statusLabel.text = "Không tải được nội dung từ URL này."
+                binding.statusLabel.text = "Failed to fetch content from this URL."
             }
         }
     }
@@ -279,9 +309,9 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
                 val text = stream.bufferedReader().readText()
                 binding.codeInput.setText(text)
             }
-            showPickedFileLabel("Đã nạp file: $name")
+            showPickedFileLabel("File loaded: $name")
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Không đọc được file: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Failed to read file: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -314,7 +344,7 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
     private fun runTool() {
         val code = currentCode()
         if (code.isEmpty()) {
-            Toast.makeText(requireContext(), "Chưa có code để xử lý", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No code to process", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -349,7 +379,7 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
     private fun runDetectOnly() {
         val code = currentCode()
         if (code.isEmpty()) {
-            Toast.makeText(requireContext(), "Chưa có code để nhận diện", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No code to detect", Toast.LENGTH_SHORT).show()
             return
         }
         setLoading(true)
@@ -360,10 +390,10 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
             setLoading(false)
             if (result.success) {
                 binding.statusLabel.setTextColor(resources.getColor(R.color.accent_cyan, null))
-                binding.statusLabel.text = "Phát hiện: ${result.message} — ${result.extra}"
+                binding.statusLabel.text = "Detected: ${result.message} — ${result.extra}"
             } else {
                 binding.statusLabel.setTextColor(resources.getColor(R.color.error_red, null))
-                binding.statusLabel.text = "Lỗi: ${result.message}"
+                binding.statusLabel.text = "Error: ${result.message}"
             }
         }
     }
@@ -374,8 +404,8 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
             binding.resultOutput.setText(result.message)
             binding.statusLabel.setTextColor(resources.getColor(R.color.accent_lime, null))
             binding.statusLabel.text = when (mode) {
-                ToolMode.DETECT -> "Phát hiện: ${result.message} — ${result.extra}"
-                else -> result.extra ?: "Xong."
+                ToolMode.DETECT -> "Detected: ${result.message} — ${result.extra}"
+                else -> result.extra ?: "Done."
             }
             val sizeKb = result.message.toByteArray().size / 1024.0
             binding.outputSizeLabel.text = "Output: %.2f KB".format(sizeKb)
@@ -386,9 +416,9 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
             binding.statusLabel.setTextColor(resources.getColor(R.color.error_red, null))
             val presetHint = result.presets?.joinToString(", ")
             binding.statusLabel.text = if (presetHint != null) {
-                "Lỗi: ${result.message} (${presetHint})"
+                "Error: ${result.message} (${presetHint})"
             } else {
-                "Lỗi: ${result.message}"
+                "Error: ${result.message}"
             }
         }
     }
@@ -407,7 +437,7 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         } else {
             binding.runButton.animate().scaleX(1f).scaleY(1f).setDuration(160).start()
             binding.progressBar.visibility = View.GONE
-            binding.runButton.text = "Chạy"
+            binding.runButton.text = "Run"
             runPulseAnimator?.resume()
         }
 
@@ -440,14 +470,14 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         if (text.isEmpty()) return
         val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText("SylPhX Luau result", text))
-        Toast.makeText(requireContext(), "Đã copy", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Copied", Toast.LENGTH_SHORT).show()
     }
 
     /** Shows a dialog to let the user name the output file before saving, defaulting per-mode. */
     private fun showSaveDialog() {
         val text = binding.resultOutput.text?.toString().orEmpty()
         if (text.isEmpty()) {
-            Toast.makeText(requireContext(), "Chưa có kết quả để lưu", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No result to save", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -465,14 +495,14 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Lưu file")
-            .setMessage("Tên file để lưu:")
+            .setTitle("Save file")
+            .setMessage("File name to save:")
             .setView(input)
-            .setPositiveButton("Lưu") { _, _ ->
+            .setPositiveButton("Save") { _, _ ->
                 val fileName = input.text?.toString()?.trim().takeUnless { it.isNullOrEmpty() } ?: defaultName
                 saveResult(fileName, text)
             }
-            .setNegativeButton("Hủy", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 
@@ -481,9 +511,9 @@ class ToolFragment : Fragment(R.layout.fragment_tool) {
             val dir = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
             val outFile = File(dir, fileName)
             FileOutputStream(outFile).use { it.write(text.toByteArray()) }
-            Toast.makeText(requireContext(), "Đã lưu: ${outFile.absolutePath}", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Saved: ${outFile.absolutePath}", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Lỗi lưu file: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Failed to save file: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
